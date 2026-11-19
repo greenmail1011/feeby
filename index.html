@@ -50,6 +50,22 @@
   #lightbox img { max-width:none; width:auto; margin:20px auto; border-radius:0; }
   footer { text-align:center; color:#889; font-size:.85rem; padding:20px; }
   @media (max-width:600px){ header h1{font-size:1.5rem;} section{padding:16px;} th,td{padding:6px;} }
+  #search { border:2px solid var(--blue); }
+  section, h3 { scroll-margin-top:70px; }
+  .searchbox { display:flex; gap:8px; }
+  .searchbox input { flex:1; font-size:1.1rem; padding:12px 14px; border:1px solid var(--line); border-radius:10px; outline:none; }
+  .searchbox input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(31,58,147,.15); }
+  .searchbox button { padding:0 16px; border:0; border-radius:10px; background:var(--light); color:var(--blue); font-weight:700; cursor:pointer; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 4px; }
+  .chips button { border:1px solid var(--line); background:#fff; color:var(--blue); padding:5px 12px; border-radius:999px; cursor:pointer; font-size:.95rem; }
+  .chips button:hover { background:var(--light); }
+  .result { border:1px solid var(--line); border-left:5px solid var(--blue); border-radius:10px; padding:12px 14px; margin:10px 0; }
+  .result h4 { margin:0 0 4px; font-size:1.08rem; }
+  .result p { margin:0; }
+  .result a { display:inline-block; margin-top:6px; color:var(--blue); font-weight:700; text-decoration:none; }
+  .noresult { color:#667; padding:10px 2px; }
+  .flash { animation:flash 1.6s ease-out; }
+  @keyframes flash { 0%{background:#ffe9a8;} 100%{background:transparent;} }
 </style>
 </head>
 <body>
@@ -58,30 +74,41 @@
   <p>新竹市無人機創新科技協會</p>
 </header>
 <nav>
+  <a href="#search">🔍 找問題</a>
   <a href="#videos">教學影片</a>
   <a href="#controller">遙控器按鈕</a>
   <a href="#pairing">連線不上怎麼辦</a>
 </nav>
 <main>
 
+<section id="search">
+  <h2>🔍 遇到問題？直接搜尋</h2>
+  <div class="searchbox">
+    <input id="q" type="search" placeholder="輸入問題，例如：沒反應、連不上、充電、會飄…" autocomplete="off" aria-label="搜尋問題">
+    <button type="button" id="clear">清除</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div id="results"></div>
+</section>
+
 <section id="videos">
   <h2>教學影片</h2>
 
-  <h3>1. 遙控器組裝</h3>
+  <h3 id="v-assembly">1. 遙控器組裝</h3>
   <p>將兩支搖桿套頭裝上遙控器。</p>
   <video controls playsinline preload="metadata" poster="videos/controller-assembly-poster.jpg">
     <source src="videos/controller-assembly.mp4" type="video/mp4">
     你的瀏覽器不支援影片播放，請<a href="videos/controller-assembly.mp4">下載影片</a>觀看。
   </video>
 
-  <h3>2. 電池充電</h3>
+  <h3 id="v-charging">2. 電池充電</h3>
   <p>用 USB 充電線為無人機電池充電。</p>
   <video controls playsinline preload="metadata" poster="videos/charging-poster.jpg">
     <source src="videos/charging.mp4" type="video/mp4">
     你的瀏覽器不支援影片播放，請<a href="videos/charging.mp4">下載影片</a>觀看。
   </video>
 
-  <h3>3. 歸零</h3>
+  <h3 id="v-zeroing">3. 歸零</h3>
   <p>裝上電池、開機後，將遙控器左、右兩支搖桿都往「右下」推到底歸零。</p>
   <video controls playsinline preload="metadata" poster="videos/zeroing-poster.jpg">
     <source src="videos/zeroing.mp4" type="video/mp4">
@@ -101,7 +128,7 @@
     <tr><td class="num">3</td><td>右搖桿</td><td>前進、後退、左移、右移</td></tr>
   </table>
 
-  <h3>按鈕功能</h3>
+  <h3 id="buttons">按鈕功能</h3>
   <table>
     <tr><th>編號</th><th>名稱</th><th>功能</th></tr>
     <tr><td class="num">1</td><td>電源開關</td><td>電源 ON / OFF</td></tr>
@@ -115,7 +142,7 @@
     <tr><td class="num">11</td><td>無頭模式</td><td>無頭模式開／關</td></tr>
   </table>
 
-  <h3>組合操作</h3>
+  <h3 id="combos">組合操作</h3>
   <table>
     <tr><th>組合</th><th>名稱</th><th>說明</th></tr>
     <tr><td class="num">9 + 3</td><td>微調校正</td><td>按住按鈕 9，同時將 3 號搖桿往前、後、左、右移動，以調整微調</td></tr>
@@ -129,13 +156,13 @@
 <section id="pairing">
   <h2>連線不上怎麼辦？</h2>
 
-  <h3>最常見：已連線，但沒有反應 → 搖桿先歸零</h3>
+  <h3 id="fix-zero">最常見：已連線，但沒有反應 → 搖桿先歸零</h3>
   <div class="note">
     <p style="margin:0">很多時候其實<strong>已經連線成功</strong>，只是忘了這一步：</p>
-    <p style="margin:6px 0 0"><strong>將遙控器左、右兩支搖桿都往「右下」推到底歸零</strong>，再放開，無人機就能正常操作。（看 <a href="#videos">歸零影片</a>）</p>
+    <p style="margin:6px 0 0"><strong>將遙控器左、右兩支搖桿都往「右下」推到底歸零</strong>，再放開，無人機就能正常操作。（看 <a href="#v-zeroing">歸零影片</a>）</p>
   </div>
 
-  <h3>真的連不上 → 重新對頻</h3>
+  <h3 id="fix-pair">真的連不上 → 重新對頻</h3>
   <p>如果搖桿歸零後仍無反應，請依下列步驟重新對頻：</p>
   <ol class="steps">
     <li>將無人機上電後，中心燈會先快速閃爍。</li>
@@ -158,6 +185,52 @@
 
 <div id="lightbox"><img alt=""></div>
 <script>
+const FAQ = [
+  {t:'已連線，但無人機沒反應／飛不起來', a:'最常見原因：搖桿沒歸零。將左、右兩支搖桿都往「右下」推到底歸零，再放開。', k:'沒反應 沒有反應 不動 不會動 飛不起來 起不來 沒動作 失靈 歸零 右下 連線成功', go:'#fix-zero'},
+  {t:'遙控器連不上無人機（重新對頻）', a:'上電 → 平放等中心燈恆亮、尾燈閃 → 輕拋翻轉數圈到中心燈快閃 → 放回地面 → 按 10 號鍵配對。', k:'連不上 連線 斷線 配對 對頻 綁定 沒訊號 失聯 10號', go:'#fix-pair'},
+  {t:'電池怎麼充電', a:'用 USB 充電線接上電池充電，請看充電教學影片。', k:'充電 沒電 電池 電量 USB 充電線 插頭', go:'#v-charging'},
+  {t:'搖桿頭掉了／遙控器怎麼組裝', a:'將兩支搖桿套頭裝回遙控器，請看組裝教學影片。', k:'組裝 搖桿頭 搖桿帽 掉了 安裝 套頭 零件', go:'#v-assembly'},
+  {t:'怎麼歸零（看影片）', a:'開機後，左右兩支搖桿往「右下」推到底歸零。', k:'歸零 校正 右下 開機', go:'#v-zeroing'},
+  {t:'怎麼啟動／停止馬達', a:'按 6 號鍵：短按啟動馬達，長按停止馬達。也可以兩搖桿內八字解鎖、外八字上鎖。', k:'啟動 起飛 馬達 螺旋槳 停止 降落 停機 6號 解鎖 上鎖 內八 外八', go:'#buttons'},
+  {t:'緊急停止', a:'左搖桿（油門）拉到最低，同時按 6 號鍵。', k:'緊急 急停 停止 危險 失控 撞 停下來', go:'#combos'},
+  {t:'無人機會飄、自己往一邊偏', a:'按住 9 號鍵，同時把右搖桿往反方向推，進行微調校正。', k:'飄 偏 偏移 歪 自己移動 不穩 微調 校正 9號', go:'#combos'},
+  {t:'方向跟搖桿不一致、前後左右亂掉', a:'可能開到無頭模式，按 11 號鍵切換開／關。', k:'方向 亂 相反 無頭 無頭模式 11號 前後顛倒', go:'#buttons'},
+  {t:'搖桿功能整個相反（模式 1／模式 2）', a:'正常開機是模式 2；按住 5 號鍵再開電源會變模式 1。重新正常開機即可回到模式 2。', k:'模式 模式1 模式2 美國手 日本手 搖桿相反 油門在右邊 5號', go:'#combos'},
+  {t:'速度太快或太慢', a:'按 4 號鍵切換 1～3 段速度。', k:'速度 太快 太慢 檔位 4號 快 慢', go:'#buttons'},
+  {t:'高度一直掉／想固定高度', a:'按 8 號鍵切換定高／非定高。', k:'定高 高度 掉 下降 往下掉 8號', go:'#buttons'},
+  {t:'空中翻滾', a:'按 7 號鍵進入翻轉模式；再按一次或超時退出。', k:'翻滾 翻轉 特技 7號', go:'#buttons'},
+  {t:'切換燈光', a:'按 5 號鍵循環改變燈光。', k:'燈 燈光 顏色 5號', go:'#buttons'},
+  {t:'遙控器開關機', a:'按 1 號鍵（中間）開關電源。', k:'開機 關機 電源 開關 1號', go:'#buttons'},
+];
+const CHIPS = ['沒反應','連不上','充電','會飄','緊急停止','方向亂掉','搖桿頭掉了'];
+const qEl = document.getElementById('q'), resEl = document.getElementById('results');
+const norm = s => s.toLowerCase().replace(/\s+/g,'').replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0)-65248)).replace(/號?鍵|按鈕/g,'號');
+function score(item, q){
+  const hay = norm(item.t + item.a), keys = item.k.split(' ').map(norm);
+  let s = 0;
+  for (const k of keys){ if (q.includes(k)) s += 3 + k.length; else if (k.includes(q)) s += 2; }
+  if (hay.includes(q)) s += 2;
+  [...new Set(q)].forEach(ch => { if (/[\u4e00-\u9fff0-9]/.test(ch) && (hay + keys.join('')).includes(ch)) s += 0.3; });
+  return s;
+}
+function render(){
+  const q = norm(qEl.value);
+  if (!q){ resEl.innerHTML = ''; return; }
+  const list = FAQ.map(i => [score(i,q), i]).filter(([s]) => s >= 1.5).sort((a,b) => b[0]-a[0]).slice(0,5);
+  resEl.innerHTML = list.length ? list.map(([,i]) =>
+    `<div class="result"><h4>${i.t}</h4><p>${i.a}</p><a href="${i.go}" data-go="${i.go}">看詳細說明 ↓</a></div>`).join('')
+    : '<div class="noresult">找不到相關問題，試試其他說法，例如「沒反應」「連不上」「充電」，或往下看完整說明。</div>';
+}
+qEl.addEventListener('input', render);
+document.getElementById('clear').onclick = () => { qEl.value=''; render(); qEl.focus(); };
+document.getElementById('chips').innerHTML = CHIPS.map(c => `<button type="button">${c}</button>`).join('');
+document.getElementById('chips').addEventListener('click', e => { if (e.target.tagName==='BUTTON'){ qEl.value = e.target.textContent; render(); }});
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]'); if (!a) return;
+  const el = document.querySelector(a.getAttribute('href')); if (!el) return;
+  e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'});
+  const box = el.tagName === 'H3' ? el : el; box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash');
+});
   const lb = document.getElementById('lightbox'), lbImg = lb.querySelector('img');
   document.querySelectorAll('img.zoom').forEach(img => img.addEventListener('click', () => {
     lbImg.src = img.src; lbImg.alt = img.alt; lb.style.display = 'block';
