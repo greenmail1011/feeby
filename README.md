@@ -1,5 +1,11 @@
 # Feeby 操作手冊
 
+## 教學影片
+- [遙控器組裝](videos/controller-assembly.mp4)：將兩支搖桿套頭裝上遙控器
+- [電池充電](videos/charging.mp4)：用 USB 充電線為無人機電池充電
+- [歸零](videos/zeroing.mp4)：開機後，左右兩支搖桿往「右下」推到底歸零
+- [重新對頻](videos/pairing.mp4)：連線不上時重新對頻
+
 ## 遙控器按鈕說明
 
 ![遙控器按鈕說明](images/remote-controller.png)
@@ -47,6 +53,3 @@
 5. 按下遙控器右下角的左側按鍵（10 號，對頻／配對），即可完成對頻。
 
 示範影片：[videos/pairing.mp4](videos/pairing.mp4)
-
-## 原廠說明書（第 3 頁）
-![原廠說明書第 3 頁](images/manual-p3.png)
